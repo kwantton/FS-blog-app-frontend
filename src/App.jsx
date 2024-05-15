@@ -6,7 +6,10 @@ import Footer from './components/Footer.jsx'
 
 const App = () => {
   const [blogs, setBlogs] = useState(null) // HUOM! Tämä takia, huomaa rivin ~~19 "if(!blogs) {return null}" joka varmistaa, että App:in käynnistäessä ekalla kertaa palautetaan null, ja vasta kun blogs on haettu serveriltä (?), alkaa toimimaan; palautetaan null App:ista, kunnes serveriltä on saatu data. HUOM! "The method based on conditional rendering is suitable in cases where it is impossible to define the state so that the initial rendering is possible." Eli mitään oikeaa syytä initata blogs "null":iksi ei ole; paljon mieluummin inittaa []:ksi, jolloin tätä ongelmaa ei ole!! (ongelma: null:ille ei voi kutsua .map:iä. TAI, joutuisit joka kohdassa tarkistamaan ?.map jne... paskempi vaihtoehto)
-  const [newBlog, setNewBlog] = useState('')
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newLikes, setNewLikes] = useState(0)
+  const [newUrl, setNewUrl] = useState("")
 
   const [errorMessage, setErrorMessage] = useState('')
   
@@ -25,10 +28,10 @@ const App = () => {
     event.preventDefault()   // prevents the page from being refreshed on submit event 
     console.log('form onSubmit button clicked', event.currentTarget)  // event.target works too: "event.target will return the element that was clicked but not necessarily the element to which the event listener has been attached."
     const blogObject = { // TO-DO: check what should be going on here!
-      title: newBlog,
-      author: "testi",
-      likes: 0,
-      url: "abcd"
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
+      likes: "0",
       // id : blogs.length+1 // "it's better to let the server generate the new id"
     }
 
@@ -36,38 +39,50 @@ const App = () => {
     .create(blogObject)      
     .then(blog => {        
       setBlogs(blogs.concat(blog))
-      setNewBlog('')
+      setNewTitle('')
+      setNewAuthor('')
+      setNewUrl('')
     })
   }
 
-  const handleBlogChange = (event) => {     // this event handler is called EVERY TIME onChange of the form value (=form field!). See console.logs! This is needed to be able to change the input value of the form; otherwise it's stuck forever as "a new blog" and the console will show a React error message complaining about this c:
+  const handleTitleChange = (event) => {     // this event handler is called EVERY TIME onChange of the form value (=form field!). See console.logs! This is needed to be able to change the input value of the form; otherwise it's stuck forever as "a new blog" and the console will show a React error message complaining about this c:
     console.log(event.currentTarget.value)
-    setNewBlog(event.currentTarget.value)   // this updates the newBlog based on what the value of the form input field is
+    setNewTitle(event.currentTarget.value)   // this updates the newTitle based on what the value of the form input field is
+  }
+  const handleAuthorChange = (event) => {     
+    console.log(event.currentTarget.value)
+    setNewAuthor(event.currentTarget.value)   
+  }
+  const handleLikesChange = (event) => {     
+    console.log(event.currentTarget.value)
+    setNewLikes(event.currentTarget.value)   
+  }
+  const handleUrlChange = (event) => {     
+    console.log(event.currentTarget.value)
+    setNewUrl(event.currentTarget.value)   
   }
 
   let palautettavat_blogit = [...blogs]
-  if(!palautettavat_blogit) {
-    palautettavat_blogit = []
-  } else {
     console.log("blogs:",palautettavat_blogit.length)
-  }
 
   return (
     <div>
-      <h1>Blogs</h1>
+      <h1>BlogBlob</h1>
       <Notification message={ errorMessage } />
       <ul>
-      <p>BLOGIT TÄNNE!</p>
+      <h2>Our current blogs</h2>
       {palautettavat_blogit.map(blog => 
         <Blog key={blog.id} blog={blog}/> // returns <li> Blog </li>
       )}
       
       </ul>
-      <form onSubmit={addBlog}>        
-        <input value={newBlog} onChange={handleBlogChange}/>
-        <input value={newBlog} onChange={handleBlogChange}/>
-        <input value={newBlog} onChange={handleBlogChange}/>
-        <input value={newBlog} onChange={handleBlogChange}/>        
+      <form onSubmit={addBlog}>
+        <p><i>title</i></p>        
+        <input value={newTitle} onChange={handleTitleChange}/>
+        <p><i>author</i></p>
+        <input value={newAuthor} onChange={handleAuthorChange}/>
+        <p><i>url</i></p>
+        <input value={newUrl} onChange={handleUrlChange}/>        
         <button type="submit">save</button>
       </form>
       <Footer/>
