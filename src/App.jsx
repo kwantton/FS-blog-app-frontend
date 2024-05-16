@@ -1,4 +1,5 @@
 import Blog from "./components/Blog.jsx"
+import LikeButton from "./components/LikeButton.jsx"
 import { useState, useEffect } from 'react'
 import blogService from './services/blogs' // imports THREE functions as default c: 
 import Notification from './components/Notification.jsx'
@@ -31,7 +32,7 @@ const App = () => {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
-      likes: "0",
+      likes: 0,
       // id : blogs.length+1 // "it's better to let the server generate the new id"
     }
 
@@ -53,10 +54,6 @@ const App = () => {
     console.log(event.currentTarget.value)
     setNewAuthor(event.currentTarget.value)   
   }
-  const handleLikesChange = (event) => {     
-    console.log(event.currentTarget.value)
-    setNewLikes(event.currentTarget.value)   
-  }
   const handleUrlChange = (event) => {     
     console.log(event.currentTarget.value)
     setNewUrl(event.currentTarget.value)   
@@ -65,14 +62,17 @@ const App = () => {
   let palautettavat_blogit = [...blogs]
     console.log("blogs:",palautettavat_blogit.length)
 
-  return (
+    return (
     <div>
       <h1>BlogBlob</h1>
       <Notification message={ errorMessage } />
       <ul>
       <h2>Our current blogs</h2>
       {palautettavat_blogit.map(blog => 
-        <Blog key={blog.id} blog={blog}/> // returns <li> Blog </li>
+      <div>
+        <Blog key={blog.id} blog={blog}/>
+        <LikeButton blog={blog} prelikes={blog.likes}/>
+      </div>
       )}
       
       </ul>
@@ -91,4 +91,3 @@ const App = () => {
 }
 
 export default App
-//
