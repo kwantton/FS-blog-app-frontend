@@ -11,9 +11,15 @@ const create = newObject => {
   .then(response => response.data) // returns a promise with JUST the data
 }
 
-const update = (id, newObject) => {
-  return axios.put(`${baseUrl}/${id}`, newObject)
-  .then(response => response.data) // returns a promise with JUST the data
+const update = async (id, newObject) => {
+  const response = await axios.put(`${baseUrl}/${id}`, newObject)
+  return response.data // returns a promise with JUST the data
 }
 
-export default { getAll, create, update } // object!
+const remove = async (id) => {
+  const response = await axios.delete(`${baseUrl}/${id}`) // delete ONLY needs the url c:
+  console.log("blogService remove: response after axios.DELETE:", response)
+  return response
+}
+
+export default { getAll, create, update, remove } // object!

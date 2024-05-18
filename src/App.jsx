@@ -1,5 +1,6 @@
 import Blog from "./components/Blog.jsx"
 import LikeButton from "./components/LikeButton.jsx"
+import DeleteButton from "./components/DeleteButton.jsx"
 import { useState, useEffect } from 'react'
 import blogService from './services/blogs' // imports THREE functions as default c: 
 import Notification from './components/Notification.jsx'
@@ -72,6 +73,7 @@ const App = () => {
       <div>
         <Blog key={blog.id} blog={blog}/>
         <LikeButton blog={blog} prelikes={blog.likes}/>
+        <DeleteButton blog={blog} blogs={blogs} setBlogs={setBlogs}/>
       </div>
       )}
       
